@@ -1,9 +1,9 @@
 package main
 
 import (
+	"consumer/http/authenticationclient"
 	"consumer/page"
 	"consumer/rand"
-	"consumer/user"
 	"errors"
 	"fmt"
 	"github.com/microcosm-cc/bluemonday"
@@ -11,6 +11,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -32,6 +33,7 @@ var (
 		"templates/view.html"))
 	validRestPath = regexp.MustCompile("^/(edit|save|view)/.*")
 	validPath     = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+	client        = authenticationclient.New(os.Getenv("AUTHENTICATE_BASE_URL"))
 )
 
 func markDowner(body []byte) template.HTML {
@@ -148,7 +150,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 func authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if username, password, ok := r.BasicAuth(); ok {
-			if ok := user.Authenticate(username, password); ok {
+			if ok := client.AuthenticateUser(username, password); ok {
 				next.ServeHTTP(w, r)
 				return
 			}

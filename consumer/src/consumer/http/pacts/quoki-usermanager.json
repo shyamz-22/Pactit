@@ -1,0 +1,40 @@
+{
+  "consumer": {
+    "name": "Quoki"
+  },
+  "provider": {
+    "name": "UserManager"
+  },
+  "interactions": [
+    {
+      "description": "a request to authenticate",
+      "providerState": "user exists",
+      "request": {
+        "method": "POST",
+        "path": "/users/alice/authentication",
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        "body": "password=s3cr3t",
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "type"
+          },
+          "$.body.password": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 204,
+        "headers": {
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
