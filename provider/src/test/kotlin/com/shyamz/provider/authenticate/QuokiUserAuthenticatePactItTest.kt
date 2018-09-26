@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @PactFolder("../consumer/src/consumer/http/pacts")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = ["server.port=8601"])
-class UserAuthenticatePactItTest {
+class QuokiUserAuthenticatePactItTest {
 
     @Suppress("unused")
     @JvmField
@@ -37,6 +37,6 @@ class UserAuthenticatePactItTest {
 
     @State("user exists")
     fun `user exists`() {
-        userRepository.save(User(userName = "alice", password = "s3cr3t"))
+        userRepository.save(QuokiUser(userName = "alice", password = "s3cr3t"))
     }
 }

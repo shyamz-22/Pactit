@@ -1,12 +1,9 @@
 package com.shyamz.provider.authenticate
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
-data class User(
+data class QuokiUser(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Int = 0,

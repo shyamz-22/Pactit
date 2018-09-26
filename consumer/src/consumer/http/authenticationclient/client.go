@@ -2,6 +2,7 @@ package authenticationclient
 
 import (
 	"fmt"
+	"log"
 	gohttp "net/http"
 	"net/url"
 	"strings"
@@ -10,7 +11,7 @@ import (
 const (
 	PasswordKey        = "password"
 	ContentTypeKey     = "Content-Type"
-	XWwwFormUrlEncoded = "x-www-form-urlencoded"
+	XWwwFormUrlEncoded = "application/x-www-form-urlencoded"
 	ResourceUrlFormat  = "%s/users/%s/authentication"
 )
 
@@ -36,7 +37,12 @@ func (c *Client) AuthenticateUser(username, password string) bool {
 	request, _ := gohttp.NewRequest(gohttp.MethodPost, resourceUrl, strings.NewReader(data.Encode()))
 	request.Header.Add(ContentTypeKey, XWwwFormUrlEncoded)
 
-	response, _ := c.HttpClient.Do(request)
+	response, err := c.HttpClient.Do(request)
+
+	if err != nil {
+		log.Println(err)
+		return false
+	}
 
 	return response.StatusCode == gohttp.StatusNoContent
 }
