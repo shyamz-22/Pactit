@@ -3,6 +3,7 @@ package main
 import (
 	"consumer/page"
 	"consumer/rand"
+	"consumer/user"
 	"errors"
 	"fmt"
 	"github.com/microcosm-cc/bluemonday"
@@ -10,7 +11,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 )
@@ -148,7 +148,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 func authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if username, password, ok := r.BasicAuth(); ok {
-			if validUser(username, password) {
+			if ok := user.Authenticate(username, password); ok {
 				next.ServeHTTP(w, r)
 				return
 			}
@@ -156,12 +156,6 @@ func authenticate(next http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("WWW-Authenticate", "Basic realm=\"user\"")
 		http.Error(w, authReqMessage, http.StatusUnauthorized)
 	}
-}
-
-func validUser(username string, password string) bool {
-	expectedUsername := os.Getenv("QUOKI_USERNAME")
-	expectedPassword := os.Getenv("QUOKI_PASSWORD")
-	return username == expectedUsername && password == expectedPassword
 }
 
 func main() {
