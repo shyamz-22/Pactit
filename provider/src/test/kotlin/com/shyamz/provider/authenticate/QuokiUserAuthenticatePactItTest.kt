@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @RunWith(SpringRestPactRunner::class)
 @Provider("UserManager")
 @Consumer("Quoki")
-@PactFolder("../consumer/src/consumer/http/pacts")
+@PactFolder("../consumer/http/pacts")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = ["server.port=8601"])
 class QuokiUserAuthenticatePactItTest {
