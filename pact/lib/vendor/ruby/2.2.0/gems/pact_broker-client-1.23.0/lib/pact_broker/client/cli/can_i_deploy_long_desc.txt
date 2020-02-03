@@ -1,0 +1,84 @@
+Returns exit code 0 or 1, indicating whether or not the specified application (pacticipant) versions are compatible (ie. safe to deploy). Prints out the relevant pact/verification details, indicating any missing or failed verification results.
+
+The environment variables PACT_BROKER_BASE_URL, PACT_BROKER_USERNAME and PACT_BROKER_PASSWORD may be used instead of their respective command line options.
+
+There are two ways to use `can-i-deploy`. The first (recommended and most common) approach is to specify just the application version you want to deploy and let the Pact Broker work out the dependencies for you. The second approach is to specify each application version explicitly. This would generally only be used if there were limitations that stopped you being able to use the first approach.
+
+#### Specifying an application version
+
+To specify an application (pacticipant) version you need to provide:
+
+* the name of the application using the `--pacticipant PACTICIPANT` parameter,
+* directly followed by *one* of the following parameters:
+    * `--version VERSION` to specify a known application version (recommended)
+    * `--latest` to specify the latest version
+    * `--latest TAG` to specify the latest version that has a particular tag
+
+Using a specific version is the easiest way to ensure you get an accurate response that won't be affected by race conditions.
+
+#### Recommended usage - allowing the Pact Broker to automatically determine the dependencies
+
+If you would like the Pact Broker to calculate the dependencies for you when you want to deploy an application into a given environment, you will need to let the Broker know what application versions are in that environment. To do this, the relevant application version resource in the Broker will need to be "tagged" with the name of the environment during the deployment process:
+
+    $ pact-broker create-version-tag --pacticipant Foo --version 173153ae0 --tag test
+
+This allows you to use the following simple command to find out if you are safe to deploy:
+
+    $ pact-broker can-i-deploy --pacticipant PACTICIPANT --version VERSION \
+                               --to ENVIRONMENT \
+                               --broker-base-url BROKER_BASE_URL
+
+If the `--to` tag is omitted, then the query will return the compatiblity with the overall latest version of each of the other applications.
+
+Examples:
+
+
+Can I deploy version 173153ae0 of application Foo to the test environment?
+
+
+    $ pact-broker can-i-deploy --pacticipant Foo --version 173153ae0 \
+                               --to test \
+                               --broker-base-url https://my-pact-broker
+
+
+Can I deploy the latest version of application Foo with the latest version of each of the applications it integrates to?
+
+
+    $ pact-broker can-i-deploy --pacticipant Foo --latest \
+                               --broker-base-url https://my-pact-broker
+
+
+Can I deploy the latest version of the application Foo that has the tag "test" to the "prod" environment?
+
+    $ pact-broker can-i-deploy --pacticipant Foo --latest test \
+                               --to prod \
+                               --broker-base-url https://my-pact-broker
+
+
+
+#### Alternate usage - specifying all dependencies explicitly
+
+If you are unable to use tags, or there is some other limitation that stops you from using the recommended approach, you can specify each of the application versions explictly. You can specify as many application versions as you like.
+
+    $ pact-broker can-i-deploy --pacticipant PACTICIPANT_1 [--version VERSION_1 | --latest [TAG]] \
+                               --pacticipant PACTICIPANT_2 [--version VERSION_2 | --latest [TAG_2]] \
+                               --to ENVIRONMENT \
+                               --broker-base-url BROKER_BASE_URL
+
+Examples:
+
+
+Can I deploy version Foo version 173153ae0 and Bar version ac23df1e8 together?
+
+
+    $ pact-broker can-i-deploy --pacticipant Foo --version 173153ae0 \
+                               --pacticipant Bar --version ac23df1e8 \
+                               --broker-base-url BROKER_BASE_URL
+
+
+Can I deploy the latest version of Foo with tag "master" and the latest version of Bar with tag "master" together?
+
+    $ pact-broker can-i-deploy --pacticipant Foo --latest master \
+                               --pacticipant Bar --latest master \
+                               --broker-base-url BROKER_BASE_URL
+

@@ -25,7 +25,7 @@ class QuokiUserAuthenticatePactItTest {
     @Suppress("unused")
     @JvmField
     @TestTarget
-    final val target: Target = HttpTarget(8601)
+    final val target: Target = HttpTarget(port = 8601, insecure = true)
 
     @Autowired
     private lateinit var userRepository: UserRepository
