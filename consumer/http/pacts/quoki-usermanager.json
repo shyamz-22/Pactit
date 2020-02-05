@@ -13,6 +13,64 @@
         "method": "POST",
         "path": "/users/alice/authentication",
         "headers": {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Api-Key": "2bc90bbb0c7be4e5"
+        },
+        "body": "password=s3cr3t",
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "type"
+          },
+          "$.headers.X-Api-Key": {
+            "match": "type"
+          },
+          "$.body.password": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 204,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "a request to authenticate with invalid username and password",
+      "providerState": "user exists",
+      "request": {
+        "method": "POST",
+        "path": "/users/alice/authentication",
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Api-Key": "2bc90bbb0c7be4e5"
+        },
+        "body": "password=invalidPassword",
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "type"
+          },
+          "$.headers.X-Api-Key": {
+            "match": "type"
+          },
+          "$.body.password": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "a request to authenticate without api key",
+      "providerState": "user exists",
+      "request": {
+        "method": "POST",
+        "path": "/users/alice/authentication",
+        "headers": {
           "Content-Type": "application/x-www-form-urlencoded"
         },
         "body": "password=s3cr3t",
@@ -26,7 +84,7 @@
         }
       },
       "response": {
-        "status": 204,
+        "status": 401,
         "headers": {
         }
       }

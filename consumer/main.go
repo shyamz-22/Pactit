@@ -33,7 +33,7 @@ var (
 		"templates/view.html"))
 	validRestPath = regexp.MustCompile("^/(edit|save|view)/.*")
 	validPath     = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
-	client        = authenticationclient.New(os.Getenv("AUTHENTICATE_BASE_URL"))
+	client        = authenticationclient.New(os.Getenv("AUTHENTICATE_BASE_URL"), os.Getenv("API_KEY"))
 )
 
 func markDowner(body []byte) template.HTML {

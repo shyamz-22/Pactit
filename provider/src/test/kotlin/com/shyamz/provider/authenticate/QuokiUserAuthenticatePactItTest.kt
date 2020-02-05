@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 
 
 @RunWith(SpringRestPactRunner::class)
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @PactFolder("../consumer/http/pacts")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = ["server.port=8601"])
+@ActiveProfiles("pact")
 class QuokiUserAuthenticatePactItTest {
 
     @Suppress("unused")
